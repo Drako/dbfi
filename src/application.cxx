@@ -19,7 +19,11 @@
 
 #include <application.hxx>
 
+#include <iostream>
+
 #include <cassert>
+
+#include <boost/program_options.hpp>
 
 namespace dbfi
 {
@@ -39,6 +43,14 @@ namespace dbfi
 
 	int application::main(int argc, char ** argv)
 	{
+		namespace po = boost::program_options;
+
+		po::options_description desc;
+		desc.add_options()
+			("help,?", "produce help message")
+			("version,v", "show version information")
+		;
+
 		return 0;
 	}
 
