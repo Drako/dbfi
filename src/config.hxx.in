@@ -37,11 +37,24 @@
 #endif
 
 // architecture detection
-#if sizeof(void*) == 4
-#define DBFI_ARCH "x86"
-#elif sizeof(void*) == 8
-#define DBFI_ARCH "x86_64"
-#endif
+namespace { namespace dbfi { namespace config {
+	template <int PointerSize>
+	struct architecture
+	{
+		static char const * const value;
+	};
+
+	template <>
+	char const * const architecture<4>::value = "x86";
+
+	template <>
+	char const * const architecture<8>::value = "x86_64";
+}}
+
+	static char const * const architecture = dbfi::config::architecture<sizeof(void*)>::value;
+}
+
+#define DBFI_ARCH (::architecture)
 
 #endif // DBFI_CONFIG_HXX
 

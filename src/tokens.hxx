@@ -17,35 +17,38 @@
  * along with dbfi.  If not, see <http://www.gnu.org/licenses/>.        *
  ************************************************************************/
 
-#ifndef DBFI_APPLICATION_HXX
-#define DBFI_APPLICATION_HXX
+#ifndef DBFI_TOKENS_HXX
+#define DBFI_TOKENS_HXX
 
-#include <tokens.hxx>
-
-#include <boost/utility.hpp>
+#include <boost/ptr_container/ptr_list.hpp>
 
 namespace dbfi
 {
-	class application
-		: private boost::noncopyable
+	enum token_type
 	{
-	public:
-		// constructor/destructor
-		application();
-		~application();
-		
-		// main entry point
-		int main(int argc, char ** argv);
+		TOK_PROGRAM = 0, // Special token used for the root node
+		TOK_INCPTR, // >
+		TOK_DECPTR, // <
+		TOK_INCVAL, // +
+		TOK_DECVAL, // -
+		TOK_PUTCHAR, // .
+		TOK_GETCHAR, // ,
+		TOK_OPENLOOP, // [
+		TOK_CLOSELOOP // ]
+	};
 
-		// singleton access
-		static application & instance();
-		static application * instance_ptr();
-	private:
-		static application * instance_;
+	struct token_tree
+	{
+		token_type type_;
+	};
 
-		program script_;
+	struct program
+		: token_tree
+	{
+		program * parent_scope_;
+		boost::ptr_list<token_tree> instructions_;
 	};
 }
 
-#endif // DBFI_APPLICATION_HXX
+#endif // DBFI_TOKENS_HXX
 

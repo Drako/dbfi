@@ -1,0 +1,84 @@
+/************************************************************************
+ * Copyright (C) 2010, Felix Bytow <drako123@gmx.de>                    *
+ *                                                                      *
+ * This file is part of dbfi.                                           *
+ *                                                                      *
+ * dbfi is free software: you can redistribute it and/or modify         *
+ * it under the terms of the GNU General Public License as published by *
+ * the Free Software Foundation, either version 3 of the License, or    *
+ * (at your option) any later version.                                  *
+ *                                                                      *
+ * dbfi is distributed in the hope that it will be useful,              *
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of       *
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the        *
+ * GNU General Public License for more details.                         *
+ *                                                                      *
+ * You should have received a copy of the GNU General Public License    *
+ * along with dbfi.  If not, see <http://www.gnu.org/licenses/>.        *
+ ************************************************************************/
+
+#ifndef DBFI_PARSER_HXX
+#define DBFI_PARSER_HXX
+
+#include <tokens.hxx>
+
+#include <boost/utility.hpp>
+#include <boost/bind.hpp>
+#include <boost/spirit/include/qi.hpp>
+
+namespace dbfi
+{
+	class parser
+		: private boost::noncopyable
+	{
+	public:
+		parser(program & scope);
+
+		void incptr();
+		void decptr();
+		void incval();
+		void decval();
+		void putchar();
+		void getchar();
+		void openloop();
+		void closeloop();
+		
+	private:
+		void push_scope();
+		void pop_scope();
+		void add_to_scope(token_type tok);
+		
+		program * current_scope_;
+	};
+	
+	template <typename Iterator>
+	void parse_program(Iterator begin, Iterator end, program & scope)
+	{
+		namespace qi = boost::spirit::qi;
+		namespace ascii = boost::spirit::ascii;
+		
+		// cleanup
+		scope.type_ = TOK_PROGRAM;
+		scope.parent_scope_ = nullptr;
+		scope.instructions_.clear();
+
+		parser state(scope);
+
+		// parser definition
+		bool result = qi::parse(begin, end,
+			qi::char_('>')[boost::bind(&parser::incptr, &state)] |
+			qi::char_('<')[boost::bind(&parser::decptr, &state)] |
+			qi::char_('+')[boost::bind(&parser::incval, &state)] |
+			qi::char_('-')[boost::bind(&parser::decval, &state)] |
+			qi::char_('.')[boost::bind(&parser::putchar, &state)] |
+			qi::char_(',')[boost::bind(&parser::getchar, &state)] |
+			qi::char_('[')[boost::bind(&parser::openloop, &state)] |
+			qi::char_(']')[boost::bind(&parser::closeloop, &state)] |
+			~(qi::char_("<>+-.,[]")) // everything else is a comment
+			, ascii::space
+		);
+	}
+}
+
+#endif // DBFI_PARSER_HXX
+

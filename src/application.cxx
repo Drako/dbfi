@@ -18,8 +18,11 @@
  ************************************************************************/
 
 #include <application.hxx>
+#include <config.hxx>
+#include <parser.hxx>
 
 #include <iostream>
+#include <string>
 
 #include <cassert>
 
@@ -45,11 +48,55 @@ namespace dbfi
 	{
 		namespace po = boost::program_options;
 
-		po::options_description desc;
+		std::string filename;
+
+		///////////////////////////
+		// command line handling //
+		///////////////////////////
+		
+		po::options_description desc("Available Options");
 		desc.add_options()
 			("help,?", "produce help message")
 			("version,v", "show version information")
+			("input,i", po::value<std::string>(&filename), "input file")
 		;
+
+		po::positional_options_description p;
+		p.add("input", 1);
+
+		po::variables_map vm;
+		po::store(po::command_line_parser(argc, argv).options(desc).positional(p).run(), vm);
+		po::notify(vm);
+
+		if (vm.count("help")) {
+			std::cout << desc << std::endl;
+			return 0;
+		}
+
+		if (vm.count("version")) {
+			std::cout << "Dragon Brainfuck Interpreter\n";
+			std::cout << "Version " << DBFI_VERSION << "-r" << DBFI_GIT_HASH << " " << DBFI_BUILD_TYPE << " " << DBFI_ARCH << "\n";
+			std::cout << "Copyright (C) 2012, Felix Bytow <felix.bytow@googlemail.com>" << std::endl;
+			return 0;
+		}
+
+		if (!(vm.count("input"))) {
+			std::cerr << "Error: Missing input file name!\n";
+			std::cerr << "Usage: " << argv[0] << " [filename]" << std::endl;
+			return 1;
+		}
+
+		///////////////////
+		// input parsing //
+		///////////////////
+
+		// TODO: implement
+
+		////////////////////
+		// interpretation //
+		////////////////////
+
+		// TODO: implement
 
 		return 0;
 	}
