@@ -1,0 +1,47 @@
+#ifndef DBFI_CONFIG_HXX
+#define DBFI_CONFIG_HXX
+
+// git information
+#define DBFI_GIT_REFSPREC "@GIT_REFSPEC@"
+#define DBFI_GIT_HASH "@GIT_HASH@"
+
+// program settings
+#define DBFI_VERSION "@DBFI_VERSION@"
+#define DBFI_INSTALL_PREFIX "@CMAKE_INSTALL_PREFIX@"
+#define DBFI_BUILD_TYPE "@CMAKE_BUILD_TYPE@"
+
+// operating system detection
+#if defined(__unix__) || defined(__unix) || defined(__linux__)
+#define DBFI_UNIX
+#define DBFI_OS "Unix"
+#elif defined(_WIN32) || defined(__WINDOWS__)
+#define DBFI_WINDOWS
+#define DBFI_OS "Windows"
+#endif
+
+// compiler detection
+#if defined(__clang__)
+#define DBFI_CLANG
+#define DBFI_COMPILER "Clang"
+#define DBFI_COMPILER_VERSION \
+	(__clang_major__ "." __clang_minor__ "." __clang_patchlevel__)
+#elif defined(__GNUC__)
+#define DBFI_GCC
+#define DBFI_COMPILER "GCC"
+#define DBFI_COMPILER_VERSION \
+	(__GNUC__ "." __GNUC_MINOR__ "." __GNUC_PATCHLEVEL__)
+#elif defined(_MSC_VER)
+#define DBFI_MSVC
+#define DBFI_COMPILER "MSVC"
+#define DBFI_COMPILER_VERSION _MSC_FULL_VER
+#endif
+
+// architecture detection
+#if sizeof(void*) == 4
+#define DBFI_ARCH "x86"
+#elif sizeof(void*) == 8
+#define DBFI_ARCH "x86_64"
+#endif
+
+#endif // DBFI_CONFIG_HXX
+
