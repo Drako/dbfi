@@ -1,0 +1,8 @@
+# CMake build director
+build/
+
+# KDevelop4 stuff
+*.kdev4
+.kdev4/
+*~
+
