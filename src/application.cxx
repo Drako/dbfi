@@ -20,6 +20,7 @@
 #include <application.hxx>
 #include <config.hxx>
 #include <parser.hxx>
+#include <interpreter.hxx>
 
 #include <iostream>
 #include <string>
@@ -53,6 +54,7 @@ namespace dbfi
 		namespace spirit = boost::spirit;
 
 		std::string filename;
+		unsigned fieldsize;
 
 		///////////////////////////
 		// command line handling //
@@ -63,6 +65,7 @@ namespace dbfi
 			("help,?", "produce help message")
 			("version,v", "show version information")
 			("input,i", po::value<std::string>(&filename), "input file")
+			("fieldsize,s", po::value<unsigned>(&fieldsize)->default_value(2048), "brainfuck field size")
 		;
 
 		po::positional_options_description p;
@@ -122,7 +125,8 @@ namespace dbfi
 		// interpretation //
 		////////////////////
 
-		// TODO: implement
+		interpreter i(fieldsize);
+		i.run(script_);
 
 		return 0;
 	}
