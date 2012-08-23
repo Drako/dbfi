@@ -67,9 +67,9 @@ namespace dbfi
 		push_scope();
 	}
 
-	void parser::closeloop()
+	void parser::closeloop(bool & go_on)
 	{
-		pop_scope();
+		go_on = pop_scope();
 	}
 
 	bool parser::is_complete()
@@ -93,10 +93,11 @@ namespace dbfi
 		current_scope_ = p;
 	}
 
-	void parser::pop_scope()
+	bool parser::pop_scope()
 	{
 		if (current_scope_->parent_scope_ == nullptr)
-			throw std::runtime_error("Unexpected end of loop \']\'.");
+			return false;
 		current_scope_ = current_scope_->parent_scope_;
+		return true;
 	}
 }

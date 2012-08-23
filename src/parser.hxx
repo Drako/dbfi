@@ -24,6 +24,7 @@
 
 #include <boost/utility.hpp>
 #include <boost/bind.hpp>
+#include <boost/bind/placeholders.hpp>
 #include <boost/spirit/include/qi.hpp>
 
 namespace dbfi
@@ -41,20 +42,20 @@ namespace dbfi
 		void putchar();
 		void getchar();
 		void openloop();
-		void closeloop();
+		void closeloop(bool & go_on);
 
 		bool is_complete();
 		
 	private:
 		void push_scope();
-		void pop_scope();
+		bool pop_scope();
 		void add_to_scope(token_type tok);
 		
 		program * current_scope_;
 	};
 	
 	template <typename Iterator>
-	void parse_program(Iterator begin, Iterator end, program & scope)
+	void parse_program(Iterator & begin, Iterator end, program & scope)
 	{
 		namespace qi = boost::spirit::qi;
 		namespace ascii = boost::spirit::ascii;
@@ -70,10 +71,13 @@ namespace dbfi
 			qi::char_('.')[boost::bind(&parser::putchar, &state)] |
 			qi::char_(',')[boost::bind(&parser::getchar, &state)] |
 			qi::char_('[')[boost::bind(&parser::openloop, &state)] |
-			qi::char_(']')[boost::bind(&parser::closeloop, &state)] |
+			qi::char_(']')[boost::bind(&parser::closeloop, &state, ::_3)] |
 			(~qi::char_("<>+-.,[]")) // everything else is a comment
 			), ascii::space
 		);
+
+		if (begin != end)
+			throw std::runtime_error("Unexpected end of loop \']\'.");
 
 		if (!(state.is_complete()))
 			throw std::runtime_error("Unexpected end of file. Missing \']\'.");
