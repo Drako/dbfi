@@ -42,6 +42,8 @@ namespace dbfi
 		void getchar();
 		void openloop();
 		void closeloop();
+
+		bool is_complete();
 		
 	private:
 		void push_scope();
@@ -56,16 +58,11 @@ namespace dbfi
 	{
 		namespace qi = boost::spirit::qi;
 		namespace ascii = boost::spirit::ascii;
-		
-		// cleanup
-		scope.type_ = TOK_PROGRAM;
-		scope.parent_scope_ = nullptr;
-		scope.instructions_.clear();
 
 		parser state(scope);
 
 		// parser definition
-		bool result = qi::parse(begin, end,
+		qi::phrase_parse(begin, end, *(
 			qi::char_('>')[boost::bind(&parser::incptr, &state)] |
 			qi::char_('<')[boost::bind(&parser::decptr, &state)] |
 			qi::char_('+')[boost::bind(&parser::incval, &state)] |
@@ -74,9 +71,12 @@ namespace dbfi
 			qi::char_(',')[boost::bind(&parser::getchar, &state)] |
 			qi::char_('[')[boost::bind(&parser::openloop, &state)] |
 			qi::char_(']')[boost::bind(&parser::closeloop, &state)] |
-			~(qi::char_("<>+-.,[]")) // everything else is a comment
-			, ascii::space
+			(~qi::char_("<>+-.,[]")) // everything else is a comment
+			), ascii::space
 		);
+
+		if (!(state.is_complete()))
+			throw std::runtime_error("Unexpected end of file. Missing \']\'.");
 	}
 }
 

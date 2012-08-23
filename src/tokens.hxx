@@ -26,15 +26,13 @@ namespace dbfi
 {
 	enum token_type
 	{
-		TOK_PROGRAM = 0, // Special token used for the root node
+		TOK_PROGRAM = 0, // Special token used for scopes [] and the root node
 		TOK_INCPTR, // >
 		TOK_DECPTR, // <
 		TOK_INCVAL, // +
 		TOK_DECVAL, // -
 		TOK_PUTCHAR, // .
-		TOK_GETCHAR, // ,
-		TOK_OPENLOOP, // [
-		TOK_CLOSELOOP // ]
+		TOK_GETCHAR //
 	};
 
 	struct token_tree

@@ -23,10 +23,13 @@
 
 #include <iostream>
 #include <string>
+#include <fstream>
 
 #include <cassert>
 
 #include <boost/program_options.hpp>
+#include <boost/spirit/include/support_multi_pass.hpp>
+#include <boost/spirit/include/classic_position_iterator.hpp>
 
 namespace dbfi
 {
@@ -47,6 +50,7 @@ namespace dbfi
 	int application::main(int argc, char ** argv)
 	{
 		namespace po = boost::program_options;
+		namespace spirit = boost::spirit;
 
 		std::string filename;
 
@@ -90,7 +94,29 @@ namespace dbfi
 		// input parsing //
 		///////////////////
 
-		// TODO: implement
+		std::ifstream source(filename);
+		if (!source) {
+			std::cerr << "Error: Could not open \"" << filename << "\"." << std::endl;
+			return 2;
+		}
+
+		typedef std::istreambuf_iterator<char> base_iterator_type;
+		typedef spirit::multi_pass<base_iterator_type> forward_iterator_type;
+		typedef spirit::classic::position_iterator<forward_iterator_type> pos_iterator_type;
+
+		base_iterator_type in_begin(source);
+		forward_iterator_type fwd_begin = spirit::make_default_multi_pass(in_begin);
+		forward_iterator_type fwd_end;
+		pos_iterator_type pos_begin(fwd_begin, fwd_end, filename);
+		pos_iterator_type pos_end;
+
+		try {
+			parse_program(pos_begin, pos_end, script_);
+		} catch(std::runtime_error const & e) {
+			auto const & pos = pos_begin.get_position();
+			std::cerr << pos.file << ":" << pos.line << ":" << pos.column << ": " << e.what() << std::endl;
+			return 3;
+		}
 
 		////////////////////
 		// interpretation //
