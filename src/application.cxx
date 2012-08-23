@@ -93,6 +93,12 @@ namespace dbfi
 			return 1;
 		}
 
+		if (fieldsize == 0) {
+			std::cerr << "Error: Field size must not be 0!" << std::endl;
+			return 4;
+		}
+		
+
 		///////////////////
 		// input parsing //
 		///////////////////

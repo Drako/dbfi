@@ -84,7 +84,7 @@ namespace dbfi
 		for (auto const & cmd : scope.instructions_) {
 			switch (cmd.type_) {
 			case TOK_INCPTR:
-				if (++index_ > static_cast<int>(field_.size()))
+				if (++index_ >= static_cast<int>(field_.size()))
 					index_ = 0;
 				break;
 			case TOK_DECPTR:
