@@ -1,0 +1,6 @@
+FILE ( GLOB dbfi_SOURCES *.c )
+FILE ( GLOB dbfi_HEADERS *.h )
+
+ADD_EXECUTABLE ( dbfi ${dbfi_SOURCES} ${dbfi_HEADERS} )
+INSTALL ( TARGETS dbfi DESTINATION bin )
+
