@@ -1,0 +1,5 @@
+PROJECT ( dbfi )
+CMAKE_MINIMUM_REQUIRED ( 2.6 )
+
+ADD_SUBDIRECTORY ( src )
+
