@@ -1,6 +1,22 @@
+CONFIGURE_FILE ( config.h.in config.h )
+
 FILE ( GLOB dbfi_SOURCES *.c )
 FILE ( GLOB dbfi_HEADERS *.h )
 
-ADD_EXECUTABLE ( dbfi ${dbfi_SOURCES} ${dbfi_HEADERS} )
+FILE ( GLOB dbfi_interpreter_SOURCES interpreter/*.c )
+FILE ( GLOB dbfi_interpreter_HEADERS interpreter/*.h )
+
+IF ( LIBTCC_FOUND )
+    FILE ( GLOB dbfi_compiler_SOURCES compiler/*.c )
+    FILE ( GLOB dbfi_compiler_HEADERS compiler/*.h )
+ENDIF ()
+
+ADD_EXECUTABLE (
+    dbfi
+    ${dbfi_SOURCES}             ${dbfi_HEADERS}
+    ${dbfi_interpreter_SOURCES} ${dbfi_interpreter_HEADERS}
+    ${dbfi_compiler_SOURCES}    ${dbfi_compiler_HEADERS}
+    "${CMAKE_CURRENT_BINARY_DIR}/config.h"
+)
 INSTALL ( TARGETS dbfi DESTINATION bin )
 
