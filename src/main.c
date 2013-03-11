@@ -29,7 +29,7 @@ int main(int argc, char ** argv)
 {
     char ** arg;
     
-    for (arg = argv + 1; arg != argv + argc; ++argv)
+    for (arg = argv + 1; arg != argv + argc; ++arg)
     {
         /* show help message */
         if ((!strcmp(*arg, "--help")) || (!strcmp(*arg, "-?")))
