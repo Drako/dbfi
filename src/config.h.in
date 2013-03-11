@@ -1,0 +1,16 @@
+#if !defined(DBFI_CONFIG_H)
+#define DBFI_CONFIG_H
+
+#define DBFI_VERSION_MAJOR 3
+#define DBFI_VERSION_MINOR 0
+#define DBFI_VERSION "3.0"
+
+#define DBFI_GIT_HASH    "@GIT_HASH@"
+#define DBFI_GIT_REFSPEC "@GIT_REFSPEC@"
+
+#cmakedefine LIBTCC_FOUND
+
+#define DBFI_BUILD_TYPE "@CMAKE_BUILD_TYPE@"
+
+#endif /* DBFI_CONFIG_H */
+
