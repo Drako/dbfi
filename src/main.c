@@ -1,6 +1,7 @@
 #include "config.h"
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 void dbfi_help(char * app)
@@ -25,9 +26,29 @@ void dbfi_version(void)
     );
 }
 
+char const * dbfi_next_arg(char *** current_arg, char ** end)
+{
+    if (*current_arg + 1 == end)
+    {
+        fprintf(stderr, "Error: \"--output,-o\" requires a filename as a parameter.\n");
+        exit(1);
+    }
+    
+    ++(*current_arg);
+    return (**current_arg);
+}
+
+int dbfi_main(char * filename, int compile, char * output)
+{
+    return 0;
+}
+
 int main(int argc, char ** argv)
 {
     char ** arg;
+    int compile = 0;
+    char filename[1024] = "";
+    char output[1024] = "";
     
     for (arg = argv + 1; arg != argv + argc; ++arg)
     {
@@ -38,10 +59,44 @@ int main(int argc, char ** argv)
             return 0;
         }
         
-        if ((!strcmp(*arg, "--version")) || (!strcmp(*arg, "-v")))
+        /* show version information */
+        else if ((!strcmp(*arg, "--version")) || (!strcmp(*arg, "-v")))
         {
             dbfi_version();
             return 0;
         }
+        
+        /* switch to compiler mode */
+        else if ((!strcmp(*arg, "--compile")) || (!strcmp(*arg, "-c")))
+        {
+            compile = 1;
+        }
+        
+        /* set output filename for compiler mode */
+        else if ((!strcmp(*arg, "--output")) || (!strcmp(*arg, "-o")))
+        {
+            strncpy(output, dbfi_next_arg(&arg, argv + argc), sizeof(output));
+        }
+        
+        /* other things starting with '-' are invalid options */
+        else if ((*arg)[0] == '-')
+        {
+            fprintf(stderr, "Error: Unknown command line option. See --help for available options.\n");
+            return 1;
+        }
+        
+        /* the source filename */
+        else
+        {
+            strncpy(filename, *arg, sizeof(filename));
+        }
     }
+    
+    if (filename[0] == '\0')
+    {
+        fprintf(stderr, "Error: No filename of a brainfuck script has been given.\n");
+        return 1;
+    }
+    
+    return dbfi_main(filename, compile, output);
 }
