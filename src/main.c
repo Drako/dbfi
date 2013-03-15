@@ -47,7 +47,13 @@ int main(int argc, char ** argv)
 {
     char ** arg;
     int compile = 0;
+#if defined(__linux__)
+    /* on Linux we default to stdin if no filename is given */
+    char filename[1024] = "/dev/stdin";
+#else
+    /* on Windows the filename is mandatory */
     char filename[1024] = "";
+#endif /* __linux__ */
     char output[1024] = "";
     
     for (arg = argv + 1; arg != argv + argc; ++arg)
