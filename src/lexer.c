@@ -12,7 +12,7 @@ struct dbfi_lexer
     char const * filename_;
 };
 
-struct dbfi_lexer * dbfi_lexer_init(char const * filename)
+dbfi_lexer_t dbfi_lexer_init(char const * filename)
 {
     struct dbfi_lexer * lexer = malloc(sizeof(struct dbfi_lexer));
     if (!lexer)
@@ -31,7 +31,7 @@ struct dbfi_lexer * dbfi_lexer_init(char const * filename)
     return lexer;
 }
 
-void dbfi_lexer_release(struct dbfi_lexer * this)
+void dbfi_lexer_release(dbfi_lexer_t this)
 {
     if (this)
     {
@@ -40,7 +40,7 @@ void dbfi_lexer_release(struct dbfi_lexer * this)
     }
 }
 
-dbfi_token_info_t * dbfi_lexer_next_token(struct dbfi_lexer * this)
+dbfi_token_info_t * dbfi_lexer_next_token(dbfi_lexer_t this)
 {
     static dbfi_token_info_t tok;
     

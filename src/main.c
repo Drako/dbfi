@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <assert.h>
 
 void dbfi_help(char * app)
 {
@@ -41,7 +42,9 @@ char const * dbfi_next_arg(char *** current_arg, char ** end)
 
 int dbfi_main(char * filename, int compile, char * output)
 {
-    struct dbfi_lexer * lexer = dbfi_lexer_init(filename);
+    dbfi_lexer_t lexer = dbfi_lexer_init(filename);
+    assert(lexer);
+    
     dbfi_lexer_release(lexer);
     return 0;
 }
