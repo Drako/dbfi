@@ -9,6 +9,7 @@ FILE ( GLOB dbfi_interpreter_HEADERS interpreter/*.h )
 IF ( LIBTCC_FOUND )
     FILE ( GLOB dbfi_compiler_SOURCES compiler/*.c )
     FILE ( GLOB dbfi_compiler_HEADERS compiler/*.h )
+    INCLUDE_DIRECTORIES ( ${LIBTCC_INCLUDE_DIRS} )
 ENDIF ()
 
 ADD_EXECUTABLE (
@@ -18,5 +19,5 @@ ADD_EXECUTABLE (
     ${dbfi_compiler_SOURCES}    ${dbfi_compiler_HEADERS}
     "${CMAKE_CURRENT_BINARY_DIR}/config.h"
 )
+TARGET_LINK_LIBRARIES ( dbfi ${LIBTCC_LIBRARIES} )
 INSTALL ( TARGETS dbfi DESTINATION bin )
-

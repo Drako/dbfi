@@ -8,6 +8,8 @@ dbfi_parser_tree_t dbfi_parser_tree_init(void)
     dbfi_parser_tree_t tree = malloc(sizeof(dbfi_node_t));
     tree->type_ = DBFI_NODE_NONE;
     tree->next_ = NULL;
+    
+    return tree;
 }
 
 void dbfi_parser_tree_release(dbfi_parser_tree_t _this)
