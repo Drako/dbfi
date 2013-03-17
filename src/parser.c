@@ -43,6 +43,7 @@ dbfi_parser_tree_t dbfi_parser_generate_tree(dbfi_parser_t _this, dbfi_lexer_t l
             return NULL;
     }
     
+    /* walk through tokens till end of file or end of scope */
     tok = dbfi_lexer_next_token(lexer);
     while (tok->type_ != DBFI_TOKEN_BRIGHT && tok->type_ != DBFI_TOKEN_EOF)
     {
@@ -65,6 +66,8 @@ dbfi_parser_tree_t dbfi_parser_generate_tree(dbfi_parser_t _this, dbfi_lexer_t l
     {
         _this->current_scope_ = NULL;
         
+        /* we are at root scope... the scope has ended... but not the file
+         * thus there has to be an unexpected ] (right bracket) */
         if (tok->type_ != DBFI_TOKEN_EOF)
         {
             fprintf(stderr,

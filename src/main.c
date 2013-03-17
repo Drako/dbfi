@@ -14,7 +14,9 @@ void dbfi_help(char * app)
         "Available options:\n"
         "  --help,-?               - Show this help message\n"
         "  --version,-v            - Show version information\n"
+#if defined(LIBTCC_FOUND)
         "  --compile,-c            - Compile to native program instead of interpreting\n"
+#endif /* LIBTCC_FOUND */
         "  --output,-o  [filename] - Alternative output filename for --compile\n"
     , app);
 }
@@ -24,8 +26,13 @@ void dbfi_version(void)
     printf(
         "Dragon BrainFuck Interpreter (dbfi) Version " DBFI_VERSION "\n"
         "Copyright (C) 2013, Felix Bytow <felix.bytow@googlemail.com>\n\n"
-        "Git-Hash:   " DBFI_GIT_HASH "\n"
-        "Build-Type: " DBFI_BUILD_TYPE "\n"
+        "Git-Hash:         " DBFI_GIT_HASH "\n"
+        "Build-Type:       " DBFI_BUILD_TYPE "\n"
+#if defined(LIBTCC_FOUND)
+        "Builtin-Compiler: Yes\n"
+#else
+        "Builtin-Compiler: No\n"
+#endif
     );
 }
 
@@ -88,11 +95,13 @@ int main(int argc, char ** argv)
             return 0;
         }
         
+#if defined(LIBTCC_FOUND)
         /* switch to compiler mode */
         else if ((!strcmp(*arg, "--compile")) || (!strcmp(*arg, "-c")))
         {
             compile = 1;
         }
+#endif /* LIBTCC_FOUND */
         
         /* set output filename for compiler mode */
         else if ((!strcmp(*arg, "--output")) || (!strcmp(*arg, "-o")))
