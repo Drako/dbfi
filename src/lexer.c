@@ -31,34 +31,34 @@ dbfi_lexer_t dbfi_lexer_init(char const * filename)
     return lexer;
 }
 
-void dbfi_lexer_release(dbfi_lexer_t this)
+void dbfi_lexer_release(dbfi_lexer_t _this)
 {
-    if (this)
+    if (_this)
     {
-        fclose(this->source_);
-        free(this);
+        fclose(_this->source_);
+        free(_this);
     }
 }
 
-dbfi_token_info_t * dbfi_lexer_next_token(dbfi_lexer_t this)
+dbfi_token_info_t * dbfi_lexer_next_token(dbfi_lexer_t _this)
 {
     static dbfi_token_info_t tok;
     
-    assert(this);
-    assert(this->source_);
-    assert(this->filename_);
+    assert(_this);
+    assert(_this->source_);
+    assert(_this->filename_);
     
-    tok.filename_ = this->filename_;
+    tok.filename_ = _this->filename_;
     
-    for (; !feof(this->source_);)
+    for (; !feof(_this->source_);)
     {
         int c; /* current character */
         
-        tok.row_ = this->row_;
-        tok.column_ = this->column_;
+        tok.row_ = _this->row_;
+        tok.column_ = _this->column_;
         
-        c = fgetc(this->source_);
-        ++(this->column_);
+        c = fgetc(_this->source_);
+        ++(_this->column_);
         
         switch (c)
         {
@@ -106,8 +106,8 @@ dbfi_token_info_t * dbfi_lexer_next_token(dbfi_lexer_t this)
         case '\n':
         case '\r':
             {
-                ++(this->row_);
-                this->column_ = 0;
+                ++(_this->row_);
+                _this->column_ = 0;
             } break;
         }
     }

@@ -29,8 +29,8 @@ typedef struct dbfi_node
 typedef struct dbfi_node * dbfi_parser_tree_t;
 
 dbfi_parser_tree_t dbfi_parser_tree_init(void);
-void dbfi_parser_tree_release(dbfi_parser_tree_t this);
-void dbfi_parser_tree_add_command(dbfi_parser_tree_t this, dbfi_token_type_t command);
-dbfi_parser_tree_t dbfi_parser_tree_add_scope(dbfi_parser_tree_t this);
+void dbfi_parser_tree_release(dbfi_parser_tree_t _this);
+void dbfi_parser_tree_add_command(dbfi_parser_tree_t _this, dbfi_token_type_t command);
+dbfi_parser_tree_t dbfi_parser_tree_add_scope(dbfi_parser_tree_t _this);
 
 #endif /* DBFI_PARSER_TREE */

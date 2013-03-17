@@ -1,5 +1,6 @@
 #include "config.h"
 #include "lexer.h"
+#include "parser.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -43,9 +44,18 @@ char const * dbfi_next_arg(char *** current_arg, char ** end)
 int dbfi_main(char * filename, int compile, char * output)
 {
     dbfi_lexer_t lexer = dbfi_lexer_init(filename);
-    assert(lexer);
+    dbfi_parser_t parser = dbfi_parser_init();
+    dbfi_parser_tree_t pt;
     
+    assert(lexer);
+    assert(parser);
+    
+    pt = dbfi_parser_generate_tree(parser, lexer);
+    
+    dbfi_parser_release(parser);
     dbfi_lexer_release(lexer);
+    
+    assert(pt);
     return 0;
 }
 
