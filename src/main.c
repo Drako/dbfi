@@ -28,8 +28,9 @@ void dbfi_version(void)
         "Copyright (C) 2013, Felix Bytow <felix.bytow@googlemail.com>\n\n"
         "Git-Hash:         " DBFI_GIT_HASH "\n"
         "Build-Type:       " DBFI_BUILD_TYPE "\n"
+        "Compiled with:    " DBFI_COMPILED_WITH "\n"
 #if defined(LIBTCC_FOUND)
-        "Builtin-Compiler: Yes\n"
+        "Builtin-Compiler: Yes (" DBFI_LIBTCC ")\n"
 #else
         "Builtin-Compiler: No\n"
 #endif
