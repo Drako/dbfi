@@ -12,7 +12,7 @@ typedef enum dbfi_token_type
     DBFI_TOKEN_BLEFT,    /* [ */
     DBFI_TOKEN_BRIGHT,   /* ] */
     DBFI_TOKEN_DOT,      /* . */
-    DBFI_TOKEN_COMMAND,  /* , */
+    DBFI_TOKEN_COMMA,    /* , */
     
     DBFI_TOKEN_EOF
 } dbfi_token_type_t;

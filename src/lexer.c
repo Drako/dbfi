@@ -99,7 +99,7 @@ dbfi_token_info_t * dbfi_lexer_next_token(dbfi_lexer_t _this)
             } break;
         case ',':
             {
-                tok.type_ = DBFI_TOKEN_COMMAND;
+                tok.type_ = DBFI_TOKEN_COMMA;
                 return &tok;
             } break;
             

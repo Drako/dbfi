@@ -73,7 +73,7 @@ dbfi_parser_tree_t dbfi_parser_generate_tree(dbfi_parser_t _this, dbfi_lexer_t l
             fprintf(stderr,
                 "Error: Unexpected closing bracket.\n"
                 "At:    %s - Line: %u - Column: %u.\n"
-            , tok->filename_, (unsigned)(tok->row_), (unsigned)(tok->column_));
+            , tok->filename_, (unsigned)(tok->row_ + 1), (unsigned)(tok->column_ + 1));
             exit(-1);
         }
     }

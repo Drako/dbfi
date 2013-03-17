@@ -33,7 +33,7 @@ void dbfi_parser_tree_add_command(dbfi_parser_tree_t _this, dbfi_token_type_t co
             _this = _this->next_;
         
         /* if the tree is not empty */
-        if (_this->command_ != DBFI_NODE_NONE)
+        if (_this->type_ != DBFI_NODE_NONE)
         {
             _this->next_ = malloc(sizeof(dbfi_node_t));
             _this = _this->next_;

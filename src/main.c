@@ -1,6 +1,7 @@
 #include "config.h"
 #include "lexer.h"
 #include "parser.h"
+#include "backend.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -53,10 +54,12 @@ int dbfi_main(char * filename, int compile, char * output)
 {
     dbfi_lexer_t lexer = dbfi_lexer_init(filename);
     dbfi_parser_t parser = dbfi_parser_init();
+    dbfi_backend_t backend = dbfi_backend_init(compile ? DBFI_BACKEND_COMPILER : DBFI_BACKEND_INTERPRETER);
     dbfi_parser_tree_t pt;
     
     assert(lexer);
     assert(parser);
+    assert(backend);
     
     pt = dbfi_parser_generate_tree(parser, lexer);
     
@@ -64,6 +67,11 @@ int dbfi_main(char * filename, int compile, char * output)
     dbfi_lexer_release(lexer);
     
     assert(pt);
+    
+    dbfi_backend_process_parser_tree(backend, pt);
+    
+    dbfi_backend_release(backend);
+    
     return 0;
 }
 
