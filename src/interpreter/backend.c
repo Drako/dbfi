@@ -9,17 +9,17 @@
 #if defined(_WIN32)
 #include <conio.h>
 
-char dbfi_getch(void)
+int dbfi_getch(void)
 {
-    return (char)(_getch());
+    return _getch();
 }
 #elif defined(__linux__)
 #include <termios.h>
 
-char dbfi_getch(void)
+int dbfi_getch(void)
 {
     struct termios old, cur;
-    char result;
+    int result;
     
     tcgetattr(0, &old);
     cur = old;
@@ -27,7 +27,7 @@ char dbfi_getch(void)
     cur.c_lflag &= ~ECHO;
     tcsetattr(0, TCSANOW, &cur);
     
-    result = (char)(getchar());
+    result = getchar();
     
     tcsetattr(0, TCSANOW, &old);
     

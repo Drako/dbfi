@@ -17,5 +17,6 @@ dbfi_backend_t dbfi_backend_init(dbfi_backend_type_t type);
 void dbfi_backend_release(dbfi_backend_t _this);
 
 void dbfi_backend_process_parser_tree(dbfi_backend_t _this, dbfi_parser_tree_t pt);
+void dbfi_backend_finalize(dbfi_backend_t _this, char const * filename);
 
 #endif /* DBFI_BACKEND_H */

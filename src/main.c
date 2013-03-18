@@ -7,6 +7,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <assert.h>
+#include <limits.h>
 
 void dbfi_help(char * app)
 {
@@ -17,8 +18,8 @@ void dbfi_help(char * app)
         "  --version,-v            - Show version information\n"
 #if defined(LIBTCC_FOUND)
         "  --compile,-c            - Compile to native program instead of interpreting\n"
-#endif /* LIBTCC_FOUND */
         "  --output,-o  [filename] - Alternative output filename for --compile\n"
+#endif /* LIBTCC_FOUND */
     , app);
 }
 
@@ -28,13 +29,14 @@ void dbfi_version(void)
         "Dragon BrainFuck Interpreter (dbfi) Version " DBFI_VERSION "\n"
         "Copyright (C) 2013, Felix Bytow <felix.bytow@googlemail.com>\n\n"
         "Git-Hash:         " DBFI_GIT_HASH "\n"
-        "Build-Type:       " DBFI_BUILD_TYPE "\n"
+        "Build-Type:       " DBFI_BUILD_TYPE " - %d Bit \n"
         "Compiled with:    " DBFI_COMPILED_WITH "\n"
 #if defined(LIBTCC_FOUND)
         "Builtin-Compiler: Yes (" DBFI_LIBTCC ")\n"
 #else
         "Builtin-Compiler: No\n"
 #endif
+        , (int)(sizeof(void*) * CHAR_BIT)
     );
 }
 
@@ -53,6 +55,12 @@ char const * dbfi_next_arg(char *** current_arg, char ** end)
 int dbfi_main(char * filename, int compile, char * output)
 {
     dbfi_lexer_t lexer = dbfi_lexer_init(filename);
+    if (*output == '\0')
+    {
+        strcpy(output, filename);
+        strncat(output, ".bin", 1024);
+        output[1023] = '\0';
+    }
     dbfi_parser_t parser = dbfi_parser_init();
     dbfi_backend_t backend = dbfi_backend_init(compile ? DBFI_BACKEND_COMPILER : DBFI_BACKEND_INTERPRETER);
     dbfi_parser_tree_t pt;
@@ -70,6 +78,7 @@ int dbfi_main(char * filename, int compile, char * output)
     
     dbfi_backend_process_parser_tree(backend, pt);
     
+    dbfi_backend_finalize(backend, output);
     dbfi_backend_release(backend);
     
     return 0;
@@ -110,13 +119,13 @@ int main(int argc, char ** argv)
         {
             compile = 1;
         }
-#endif /* LIBTCC_FOUND */
         
         /* set output filename for compiler mode */
         else if ((!strcmp(*arg, "--output")) || (!strcmp(*arg, "-o")))
         {
             strncpy(output, dbfi_next_arg(&arg, argv + argc), sizeof(output));
         }
+#endif /* LIBTCC_FOUND */
         
         /* other things starting with '-' are invalid options */
         else if ((*arg)[0] == '-')
