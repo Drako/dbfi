@@ -1,5 +1,5 @@
-Dragon Brainfuck Interpret
-==========================
+Dragon Brainfuck Interpreter
+============================
 
 This is a simple Brainfuck interpreter.
 
