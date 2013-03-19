@@ -3,21 +3,28 @@ Dragon Brainfuck Interpret
 
 This is a simple Brainfuck interpreter.
 
+What's new
+----------
+
+Version 3 has been completely rewritten in C (where version 2 was in C++).
+Also the new version has almost no dependencies other than the C runtime library.
+As an optional feature a compiler mode has been added which allows to compile a brainfuck script into a real program.
+This feature requires the presence of the libtcc library.
+
 Requirements
 ------------
 
-* Boost Version 1.50.0
+Optional:
+* libtcc (TinyCC >= 0.9.26)
 
-Supported Compilers
+Tested Compilers
 -------------------
 
-* GCC >= 4.6.3
-* Clang >= 3.1
-* MSVC >= 10 (cl Version 16)
+* TinyCC (tcc) 0.9.26
 
-Supported Operating Systems
+Tested Operating Systems
 ---------------------------
 
-* Windows
-* Unix / Linux
+* Gentoo Linux
+* Linux Mint
 
