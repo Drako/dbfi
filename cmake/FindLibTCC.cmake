@@ -16,6 +16,9 @@ FIND_LIBRARY (
 		$ENV{LIBTCC_ROOT}/lib
 		/usr/local/lib
 		/usr/lib
+    PATH_SUFFIXES
+        x86_64-linux-gnu
+        tcc
 )
 
 SET ( LIBTCC_LIBRARIES ${LIBTCC_LIBRARY} )
