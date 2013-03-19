@@ -4,7 +4,10 @@ CMAKE_MINIMUM_REQUIRED ( VERSION 2.6 )
 SET ( CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake" )
 
 # optional feature... enables compiler
-FIND_PACKAGE ( LibTCC )
+OPTION ( WITH_COMPILER "enables the embedded compiler. requires libtcc" OFF )
+IF ( WITH_COMPILER )
+    FIND_PACKAGE ( LibTCC REQUIRED )
+ENDIF ()
 
 # for version information
 FIND_PACKAGE ( Git REQUIRED )
