@@ -17,11 +17,5 @@
 
 #define DBFI_COMPILED_WITH "@CMAKE_C_COMPILER_ID@ @CMAKE_C_COMPILER_VERSION@"
 
-#if sizeof(void*) == 4
-#define DBFI_BITS "32"
-#elif sizeof(void*) == 8
-#define DBFI_BITS "64"
-#endif
-
 #endif /* DBFI_CONFIG_H */
 
