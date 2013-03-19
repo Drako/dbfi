@@ -53,8 +53,10 @@ void dbfi_backend_release(dbfi_backend_t _this)
     switch (THIS->type_)
     {
     default: /* do nothing */ break;
+#if defined(LIBTCC_FOUND)
     case DBFI_BACKEND_COMPILER:
         dbfi_compiler_backend_release(_this);
+#endif /* LIBTCC_FOUND */
         /* fall through */
     case DBFI_BACKEND_INTERPRETER:
         free(_this);
@@ -83,7 +85,9 @@ void dbfi_backend_finalize(dbfi_backend_t _this, char const * filename)
     
     assert(_this);
     
+#if defined(LIBTCC_FOUND)
     if (THIS->type_ == DBFI_BACKEND_COMPILER)
         dbfi_compiler_backend_finalize(_this, filename);
+#endif /* LIBTCC_FOUND */
 }
 
