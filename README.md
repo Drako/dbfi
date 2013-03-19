@@ -18,12 +18,14 @@ Optional:
 * libtcc (TinyCC >= 0.9.26)
 
 Tested Compilers
--------------------
+----------------
 
 * TinyCC (tcc) 0.9.26
+* GCC 4.6.3
+* Clang 3.0
 
 Tested Operating Systems
----------------------------
+------------------------
 
 * Gentoo Linux
 * Linux Mint
