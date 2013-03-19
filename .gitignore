@@ -4,5 +4,14 @@ build/
 # KDevelop4 stuff
 *.kdev4
 .kdev4/
+=======
+#cmake
+build/
+
+#kdevelop
+*.kdev4
+.kdev4/
+
+#temporaries
 *~
 
