@@ -1,6 +1,9 @@
 PROJECT ( dbfi C )
 CMAKE_MINIMUM_REQUIRED ( VERSION 2.6 )
 
+SET ( DBFI_VERSION_MAJOR "3" )
+SET ( DBFI_VERSION_MINOR "0" )
+
 SET ( CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake" )
 
 # optional feature... enables compiler
