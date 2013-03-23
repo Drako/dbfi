@@ -30,6 +30,16 @@ typedef enum dbfi_node_type
     DBFI_NODE_NONE
 } dbfi_node_type_t;
 
+typedef enum dbfi_command
+{
+    DBFI_COMMAND_MODIFY_VALUE = 0,
+    DBFI_COMMAND_MODIFY_PTR,
+    DBFI_COMMAND_PRINT,
+    DBFI_COMMAND_READ,
+
+    DBFI_COMMAND_NONE
+} dbfi_command_t;
+
 typedef struct dbfi_node
 {
     dbfi_node_type_t type_;
@@ -38,7 +48,12 @@ typedef struct dbfi_node
     union
     {
         /* type_ == DBFI_NODE_COMMAND */
-        dbfi_token_type_t command_;
+        struct
+        {
+            dbfi_command_t command_;
+            /* for DBFI_COMMAND_MODIFY_VALUE and DBFI_COMMAND_MODIFY_PTR */
+            int parameter_;
+        };
         
         /* type_ == DBFI_NODE_SCOPE */
         struct dbfi_node * scope_;
@@ -49,7 +64,7 @@ typedef struct dbfi_node * dbfi_parser_tree_t;
 
 dbfi_parser_tree_t dbfi_parser_tree_init(void);
 void dbfi_parser_tree_release(dbfi_parser_tree_t _this);
-void dbfi_parser_tree_add_command(dbfi_parser_tree_t _this, dbfi_token_type_t command);
+void dbfi_parser_tree_add_command(dbfi_parser_tree_t _this, dbfi_command_t command, int param);
 dbfi_parser_tree_t dbfi_parser_tree_add_scope(dbfi_parser_tree_t _this);
 
 #endif /* DBFI_PARSER_TREE */

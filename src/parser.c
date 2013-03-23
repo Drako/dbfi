@@ -48,6 +48,8 @@ dbfi_parser_tree_t dbfi_parser_generate_tree(dbfi_parser_t _this, dbfi_lexer_t l
     dbfi_parser_tree_t result;
     dbfi_token_info_t * tok;
     int is_root = 0;
+    int param = 0;
+    dbfi_command_t last_command = DBFI_COMMAND_NONE;
     
     assert(_this);
     assert(lexer);
@@ -68,18 +70,68 @@ dbfi_parser_tree_t dbfi_parser_generate_tree(dbfi_parser_t _this, dbfi_lexer_t l
     {
         if (tok->type_ == DBFI_TOKEN_BLEFT)
         {
+            dbfi_parser_tree_add_command(result, last_command, param);
+            
             dbfi_parser_tree_t subtree = dbfi_parser_tree_add_scope(result);
             assert(subtree);
             
             _this->current_scope_ = subtree;
             dbfi_parser_generate_tree(_this, lexer);
             _this->current_scope_ = result;
+            
+            last_command = DBFI_COMMAND_NONE;
         }
         else
-            dbfi_parser_tree_add_command(result, tok->type_);
+        {
+            switch (tok->type_)
+            {
+            case DBFI_TOKEN_PLUS:
+            case DBFI_TOKEN_MINUS:
+                {
+                    if (last_command == DBFI_COMMAND_MODIFY_VALUE)
+                    {
+                        if (tok->type_ == DBFI_TOKEN_PLUS)
+                            ++param;
+                        else
+                            --param;
+                    }
+                    else
+                    {
+                        dbfi_parser_tree_add_command(result, last_command, param);
+                        last_command = DBFI_COMMAND_MODIFY_VALUE;
+                        param = (tok->type_ == DBFI_TOKEN_PLUS ? 1 : -1);
+                    }
+                } break;
+            case DBFI_TOKEN_LT:
+            case DBFI_TOKEN_GT:
+                {
+                    if (last_command == DBFI_COMMAND_MODIFY_PTR)
+                    {
+                        if (tok->type_ == DBFI_TOKEN_GT)
+                            ++param;
+                        else
+                            --param;
+                    }
+                    else
+                    {
+                        dbfi_parser_tree_add_command(result, last_command, param);
+                        last_command = DBFI_COMMAND_MODIFY_PTR;
+                        param = (tok->type_ == DBFI_TOKEN_GT ? 1 : -1);
+                    }
+                } break;
+            case DBFI_TOKEN_DOT:
+            case DBFI_TOKEN_COMMA:
+                {
+                    dbfi_parser_tree_add_command(result, last_command, param);
+                    last_command = (tok->type_ == DBFI_TOKEN_DOT ? DBFI_COMMAND_PRINT : DBFI_COMMAND_READ);
+                } break;
+            }
+        }
         
         tok = dbfi_lexer_next_token(lexer);
     }
+
+    dbfi_parser_tree_add_command(result, last_command, param);
     
     if (is_root)
     {
@@ -91,6 +143,19 @@ dbfi_parser_tree_t dbfi_parser_generate_tree(dbfi_parser_t _this, dbfi_lexer_t l
         {
             fprintf(stderr,
                 "Error: Unexpected closing bracket.\n"
+                "At:    %s - Line: %u - Column: %u.\n"
+            , tok->filename_, (unsigned)(tok->row_ + 1), (unsigned)(tok->column_ + 1));
+            exit(-1);
+        }
+    }
+    else
+    {
+        /* we are in a sub scope but already encountered the end of file
+         * instead of a closing bracked... */
+        if (tok->type_ == DBFI_TOKEN_EOF)
+        {
+            fprintf(stderr,
+                "Error: Unexpected end of file. (Closing bracket expected.)\n"
                 "At:    %s - Line: %u - Column: %u.\n"
             , tok->filename_, (unsigned)(tok->row_ + 1), (unsigned)(tok->column_ + 1));
             exit(-1);

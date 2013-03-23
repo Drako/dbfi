@@ -95,7 +95,7 @@ void dbfi_interpreter_backend_process_parser_tree(dbfi_backend_t _this, dbfi_par
             } break;
         case DBFI_NODE_COMMAND:
             {
-                dbfi_interpreter_backend_handle_command(_this, node->command_);
+                dbfi_interpreter_backend_handle_command(_this, node->command_, node->parameter_);
             } break;
         }
         
@@ -103,7 +103,7 @@ void dbfi_interpreter_backend_process_parser_tree(dbfi_backend_t _this, dbfi_par
     }
 }
 
-void dbfi_interpreter_backend_handle_command(dbfi_backend_t _this, dbfi_token_type_t command)
+void dbfi_interpreter_backend_handle_command(dbfi_backend_t _this, dbfi_command_t command, int param)
 {
     struct dbfi_interpreter_backend * THIS = _this;
     
@@ -112,27 +112,19 @@ void dbfi_interpreter_backend_handle_command(dbfi_backend_t _this, dbfi_token_ty
     switch (command)
     {
     default: /* other tokens than those below may not appear hear */ break;
-    case DBFI_TOKEN_PLUS:
+    case DBFI_COMMAND_MODIFY_VALUE:
         {
-            ++(THIS->memory_[THIS->memptr_]);
+            (THIS->memory_[THIS->memptr_]) += param;
         } break;
-    case DBFI_TOKEN_MINUS:
+    case DBFI_COMMAND_MODIFY_PTR:
         {
-            --(THIS->memory_[THIS->memptr_]);
+            (THIS->memptr_) += param;
         } break;
-    case DBFI_TOKEN_LT:
-        {
-            --(THIS->memptr_);
-        } break;
-    case DBFI_TOKEN_GT:
-        {
-            ++(THIS->memptr_);
-        } break;
-    case DBFI_TOKEN_DOT:
+    case DBFI_COMMAND_PRINT:
         {
             putchar((char)(THIS->memory_[THIS->memptr_]));
         } break;
-    case DBFI_TOKEN_COMMA:
+    case DBFI_COMMAND_READ:
         {
             THIS->memory_[THIS->memptr_] = dbfi_getch();
         } break;

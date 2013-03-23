@@ -165,7 +165,7 @@ void dbfi_compiler_backend_process_parser_tree(dbfi_backend_t _this, dbfi_parser
             } break;
         case DBFI_NODE_COMMAND:
             {
-                dbfi_compiler_backend_handle_command(_this, node->command_);
+                dbfi_compiler_backend_handle_command(_this, node->command_, node->parameter_);
             } break;
         }
         
@@ -173,34 +173,43 @@ void dbfi_compiler_backend_process_parser_tree(dbfi_backend_t _this, dbfi_parser
     }
 }
 
-void dbfi_compiler_backend_handle_command(dbfi_backend_t _this, dbfi_token_type_t command)
+void dbfi_compiler_backend_handle_command(dbfi_backend_t _this, dbfi_command_t command, int param)
 {
     /* assert(_this); */
-    
+    char buf[64];
+
     switch (command)
     {
     default: /* other tokens than those below may not appear hear */ break;
-    case DBFI_TOKEN_PLUS:
+    case DBFI_COMMAND_MODIFY_VALUE:
         {
-            dbfi_compiler_backend_add_code(_this, "\t++(memory[memptr]);\n");
+            if (param == 1)
+                dbfi_compiler_backend_add_code(_this, "\t++(memory[memptr]);\n");
+            else if (param == -1)
+                dbfi_compiler_backend_add_code(_this, "\t--(memory[memptr]);\n");
+            else
+            {
+                sprintf(buf, "\tmemory[memptr] += %d;\n", param);
+                dbfi_compiler_backend_add_code(_this, buf);
+            }
         } break;
-    case DBFI_TOKEN_MINUS:
+    case DBFI_COMMAND_MODIFY_PTR:
         {
-            dbfi_compiler_backend_add_code(_this, "\t--(memory[memptr]);\n");
+            if (param == 1)
+                dbfi_compiler_backend_add_code(_this, "\t++memptr;\n");
+            else if (param == -1)
+                dbfi_compiler_backend_add_code(_this, "\t--memptr;\n");
+            else
+            {
+                sprintf(buf, "\tmemptr += %d;\n", param);
+                dbfi_compiler_backend_add_code(_this, buf);
+            }
         } break;
-    case DBFI_TOKEN_LT:
-        {
-            dbfi_compiler_backend_add_code(_this, "\t--memptr;\n");
-        } break;
-    case DBFI_TOKEN_GT:
-        {
-            dbfi_compiler_backend_add_code(_this, "\t++memptr;\n");
-        } break;
-    case DBFI_TOKEN_DOT:
+    case DBFI_COMMAND_PRINT:
         {
             dbfi_compiler_backend_add_code(_this, "\tputchar((char)(memory[memptr]));\n");
         } break;
-    case DBFI_TOKEN_COMMA:
+    case DBFI_COMMAND_READ:
         {
             dbfi_compiler_backend_add_code(_this, "\tmemory[memptr] = dbfi_getch();\n");
         } break;
@@ -223,6 +232,7 @@ void dbfi_compiler_backend_finalize(dbfi_backend_t _this, char const * filename)
     );
     
     tcc_set_output_type(tcc, TCC_OUTPUT_EXE);
+    
     
     if (tcc_compile_string(tcc, THIS->code_) != 0)
     {

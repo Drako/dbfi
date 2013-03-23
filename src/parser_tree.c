@@ -44,8 +44,14 @@ void dbfi_parser_tree_release(dbfi_parser_tree_t _this)
     }
 }
 
-void dbfi_parser_tree_add_command(dbfi_parser_tree_t _this, dbfi_token_type_t command)
+void dbfi_parser_tree_add_command(dbfi_parser_tree_t _this, dbfi_command_t command, int param)
 {
+    /* do not add commands that have no effect at all */
+    if (command == DBFI_COMMAND_NONE ||
+        ((command == DBFI_COMMAND_MODIFY_VALUE || command == DBFI_COMMAND_MODIFY_PTR) && param == 0)
+    )
+        return;
+
     if (_this)
     {
         while (_this->next_)
@@ -68,6 +74,7 @@ void dbfi_parser_tree_add_command(dbfi_parser_tree_t _this, dbfi_token_type_t co
         _this->type_ = DBFI_NODE_COMMAND;
         _this->next_ = NULL;
         _this->command_ = command;
+        _this->parameter_ = param;
     }
 }
 
@@ -79,7 +86,7 @@ dbfi_parser_tree_t dbfi_parser_tree_add_scope(dbfi_parser_tree_t _this)
             _this = _this->next_;
         
         /* if the tree is not empty */
-        if (_this->command_ != DBFI_NODE_NONE)
+        if (_this->type_ != DBFI_NODE_NONE)
         {
             _this->next_ = malloc(sizeof(dbfi_node_t));
             _this = _this->next_;
