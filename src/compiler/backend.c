@@ -46,7 +46,7 @@ int dbfi_compiler_backend_max(int x, int y)
 void dbfi_compiler_backend_add_code(dbfi_backend_t _this, char const * code)
 {
     struct dbfi_compiler_backend * THIS = _this;
-    int length = strlen(code);
+    int length = (int)strlen(code);
     
     assert(_this);
     

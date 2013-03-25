@@ -70,9 +70,10 @@ dbfi_parser_tree_t dbfi_parser_generate_tree(dbfi_parser_t _this, dbfi_lexer_t l
     {
         if (tok->type_ == DBFI_TOKEN_BLEFT)
         {
+            dbfi_parser_tree_t subtree;
+
             dbfi_parser_tree_add_command(result, last_command, param);
-            
-            dbfi_parser_tree_t subtree = dbfi_parser_tree_add_scope(result);
+            subtree = dbfi_parser_tree_add_scope(result);
             assert(subtree);
             
             _this->current_scope_ = subtree;

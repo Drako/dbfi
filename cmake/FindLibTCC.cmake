@@ -3,16 +3,20 @@ FIND_PATH (
 	NAMES
 		libtcc.h
 	HINTS
+		${LIBTCC_ROOT}/include
 		$ENV{LIBTCC_ROOT}/include
 		/usr/local/include
 		/usr/include
+	PATH_SUFFIXES
+		libtcc
 )
 
 FIND_LIBRARY (
 	LIBTCC_LIBRARY
 	NAMES
-		tcc
+		tcc libtcc
 	HINTS
+		${LIBTCC_ROOT}/lib
 		$ENV{LIBTCC_ROOT}/lib
 		/usr/local/lib
 		/usr/lib

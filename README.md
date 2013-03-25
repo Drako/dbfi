@@ -23,10 +23,12 @@ Tested Compilers
 * TinyCC (tcc) 0.9.26
 * GCC 4.6.3
 * Clang 3.0
+* Microsoft Visual C++ 2012
 
 Tested Operating Systems
 ------------------------
 
 * Gentoo Linux
 * Linux Mint
+* Windows
 

@@ -16,6 +16,10 @@ IF ( UNIX )
     SET ( UNIX_LIBRARIES dl )
 ENDIF ()
 
+IF ( MSVC )
+    ADD_DEFINITIONS ( -D_CRT_SECURE_NO_WARNINGS )
+ENDIF ()
+
 ADD_EXECUTABLE (
     dbfi
     ${dbfi_SOURCES}             ${dbfi_HEADERS}

@@ -74,12 +74,6 @@ char const * dbfi_next_arg(char *** current_arg, char ** end)
 int dbfi_main(char * filename, int compile, char * output)
 {
     dbfi_lexer_t lexer = dbfi_lexer_init(filename);
-    if (*output == '\0')
-    {
-        strcpy(output, filename);
-        strncat(output, ".bin", 1024);
-        output[1023] = '\0';
-    }
     dbfi_parser_t parser = dbfi_parser_init();
     dbfi_backend_t backend = dbfi_backend_init(compile ? DBFI_BACKEND_COMPILER : DBFI_BACKEND_INTERPRETER);
     dbfi_parser_tree_t pt;
@@ -87,6 +81,13 @@ int dbfi_main(char * filename, int compile, char * output)
     assert(lexer);
     assert(parser);
     assert(backend);
+    
+    if (*output == '\0')
+    {
+        strcpy(output, filename);
+        strncat(output, ".bin", 1024);
+        output[1023] = '\0';
+    }
     
     pt = dbfi_parser_generate_tree(parser, lexer);
     
