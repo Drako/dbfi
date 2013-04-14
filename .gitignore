@@ -1,10 +1,13 @@
-#cmake
+# cmake
 build/
 
-#kdevelop
+# kdevelop
 *.kdev4
 .kdev4/
 
-#temporaries
+# temporaries
 *~
 
+# sublime text
+*.sublime-project
+*.sublime-workspace
