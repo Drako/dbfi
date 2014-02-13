@@ -32,3 +32,8 @@ Tested Operating Systems
 * Linux Mint
 * Windows
 
+Travis Status
+-------------
+
+[![Build Status](https://travis-ci.org/Drako/dbfi.png?branch=master)](https://travis-ci.org/Drako/dbfi)
+
