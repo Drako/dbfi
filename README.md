@@ -35,5 +35,5 @@ Tested Operating Systems
 Travis Status
 -------------
 
-[![Build Status](https://travis-ci.org/Drako/dbfi.png?branch=master)](https://travis-ci.org/Drako/dbfi)
+[![Build Status](https://travis-ci.org/Drako/dbfi.svg?branch=master)](https://travis-ci.org/Drako/dbfi)
 
