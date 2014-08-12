@@ -66,7 +66,7 @@ char const * dbfi_next_arg(char *** current_arg, char ** end)
         fprintf(stderr, "Error: \"--output,-o\" requires a filename as a parameter.\n");
         exit(1);
     }
-    
+
     ++(*current_arg);
     return (**current_arg);
 }
@@ -77,30 +77,32 @@ int dbfi_main(char * filename, int compile, char * output)
     dbfi_parser_t parser = dbfi_parser_init();
     dbfi_backend_t backend = dbfi_backend_init(compile ? DBFI_BACKEND_COMPILER : DBFI_BACKEND_INTERPRETER);
     dbfi_parser_tree_t pt;
-    
+
     assert(lexer);
     assert(parser);
     assert(backend);
-    
+
     if (*output == '\0')
     {
         strcpy(output, filename);
         strncat(output, ".bin", 1024);
         output[1023] = '\0';
     }
-    
+
     pt = dbfi_parser_generate_tree(parser, lexer);
-    
+
     dbfi_parser_release(parser);
     dbfi_lexer_release(lexer);
-    
+
     assert(pt);
-    
+
     dbfi_backend_process_parser_tree(backend, pt);
-    
+
     dbfi_backend_finalize(backend, output);
     dbfi_backend_release(backend);
-    
+
+    dbfi_parser_tree_release(pt);
+
     return 0;
 }
 
@@ -116,7 +118,7 @@ int main(int argc, char ** argv)
     char filename[1024] = "";
 #endif /* __linux__ */
     char output[1024] = "";
-    
+
     for (arg = argv + 1; arg != argv + argc; ++arg)
     {
         /* show help message */
@@ -125,48 +127,47 @@ int main(int argc, char ** argv)
             dbfi_help(argv[0]);
             return 0;
         }
-        
+
         /* show version information */
         else if ((!strcmp(*arg, "--version")) || (!strcmp(*arg, "-v")))
         {
             dbfi_version();
             return 0;
         }
-        
+
 #if defined(LIBTCC_FOUND)
         /* switch to compiler mode */
         else if ((!strcmp(*arg, "--compile")) || (!strcmp(*arg, "-c")))
         {
             compile = 1;
         }
-        
+
         /* set output filename for compiler mode */
         else if ((!strcmp(*arg, "--output")) || (!strcmp(*arg, "-o")))
         {
             strncpy(output, dbfi_next_arg(&arg, argv + argc), sizeof(output));
         }
 #endif /* LIBTCC_FOUND */
-        
+
         /* other things starting with '-' are invalid options */
         else if ((*arg)[0] == '-')
         {
             fprintf(stderr, "Error: Unknown command line option. See --help for available options.\n");
             return 1;
         }
-        
+
         /* the source filename */
         else
         {
             strncpy(filename, *arg, sizeof(filename));
         }
     }
-    
+
     if (filename[0] == '\0')
     {
         fprintf(stderr, "Error: No filename of a brainfuck script has been given.\n");
         return 1;
     }
-    
+
     return dbfi_main(filename, compile, output);
 }
-
